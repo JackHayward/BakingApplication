@@ -1,6 +1,7 @@
 package com.example.bakingapplication.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakingapplication.R;
+import com.example.bakingapplication.RecipeDetailsActivity;
 import com.example.bakingapplication.models.Recipe;
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
+  private final String RECIPE_LIST = "recipe_list";
   Context context;
   List<Recipe> recipeList;
 
@@ -38,8 +41,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     return new RecipeViewHolder(v);
   }
 
-  @Override public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
+  @Override public void onBindViewHolder(@NonNull RecipeViewHolder holder, final int position) {
     holder.recipeTitle.setText(recipeList.get(position).getName());
+
+    holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+      @Override public void onClick(View view) {
+        Recipe recipe = recipeList.get(position);
+        Intent intent = new Intent(context, RecipeDetailsActivity.class);
+        intent.putExtra(RECIPE_LIST, recipe);
+        context.startActivity(intent);
+      }
+    });
   }
 
   @Override public int getItemCount() {

@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call<List<Recipe>> call, Throwable t) {
-          Log.d("Error", t.toString());
+          Log.d("ERROR ON FAILURE", "onFailure: " + t.toString());
         }
       });
       return null;
