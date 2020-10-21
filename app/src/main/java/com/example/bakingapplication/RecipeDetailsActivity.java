@@ -8,13 +8,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakingapplication.adapters.RecipeIngredientsAdapter;
+import com.example.bakingapplication.adapters.RecipeStepsAdapter;
 import com.example.bakingapplication.models.Recipe;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
   Recipe recipe;
-  private RecyclerView recyclerView;
-  private RecyclerView.Adapter adapter;
-  private RecyclerView.LayoutManager layoutManager;
+  private RecyclerView ingredientsRecyclerView;
+  private RecyclerView.Adapter ingredientsAdapter;
+  private RecyclerView stepsRecyclerView;
+  private RecyclerView.Adapter stepsAdapter;
+  private RecyclerView.LayoutManager ingredientsLayoutManager;
+  private RecyclerView.LayoutManager stepsLayoutManager;
   private Context context = this;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,11 +27,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     Intent recipeIntent = getIntent();
     recipe = recipeIntent.getParcelableExtra("recipe_list");
+    ingredientsLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+    ingredientsRecyclerView = findViewById(R.id.recipe_ingredients_recyclerview);
+    ingredientsAdapter = new RecipeIngredientsAdapter(context, recipe.getIngredients());
+    ingredientsRecyclerView.setLayoutManager(ingredientsLayoutManager);
+    ingredientsRecyclerView.setAdapter(ingredientsAdapter);
 
-    recyclerView = findViewById(R.id.recipe_ingredients_recyclerview);
-    layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-    adapter = new RecipeIngredientsAdapter(context, recipe.getIngredients());
-    recyclerView.setLayoutManager(layoutManager);
-    recyclerView.setAdapter(adapter);
+    stepsLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+    stepsRecyclerView = findViewById(R.id.recipe_steps_recyclerview);
+    stepsAdapter = new RecipeStepsAdapter(context, recipe.getSteps());
+    stepsRecyclerView.setLayoutManager(stepsLayoutManager);
+    stepsRecyclerView.setAdapter(stepsAdapter);
   }
 }

@@ -2,4 +2,8 @@
   <string name="app_name">BakingApplication</string>
   <string name="baking_application_label">Baking Application</string>
   <string name="recipe_title">Recipe Title</string>
+  <string name="previous_step">Previous Step</string>
+  <string name="next_step">Next Step</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
