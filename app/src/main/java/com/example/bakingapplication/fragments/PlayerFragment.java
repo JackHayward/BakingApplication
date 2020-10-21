@@ -44,7 +44,6 @@ public class PlayerFragment extends Fragment {
   Uri uri;
   String description;
 
-
   public PlayerFragment() {
 
   }

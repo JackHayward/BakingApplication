@@ -25,6 +25,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recipe_details);
 
+    if (findViewById(R.id.tablet_recipe_details) == null) {
+
+    }
+
     Intent recipeIntent = getIntent();
     recipe = recipeIntent.getParcelableExtra("recipe_list");
     ingredientsLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
