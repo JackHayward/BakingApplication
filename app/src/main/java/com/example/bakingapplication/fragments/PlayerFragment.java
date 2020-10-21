@@ -45,7 +45,6 @@ public class PlayerFragment extends Fragment {
   String description;
 
   public PlayerFragment() {
-
   }
 
   public void initialisePlayer(Uri videoUri){
@@ -72,7 +71,7 @@ public class PlayerFragment extends Fragment {
     }
   }
 
-  public static PlayerFragment newInstance(String param1, String param2) {
+  public static PlayerFragment newInstance() {
     PlayerFragment fragment = new PlayerFragment();
     Bundle args = new Bundle();
     fragment.setArguments(args);

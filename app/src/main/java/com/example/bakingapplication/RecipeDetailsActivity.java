@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakingapplication.adapters.RecipeIngredientsAdapter;
 import com.example.bakingapplication.adapters.RecipeStepsAdapter;
+import com.example.bakingapplication.fragments.RecipeDetailsFragment;
 import com.example.bakingapplication.models.Recipe;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
@@ -20,27 +22,37 @@ public class RecipeDetailsActivity extends AppCompatActivity {
   private RecyclerView.LayoutManager ingredientsLayoutManager;
   private RecyclerView.LayoutManager stepsLayoutManager;
   private Context context = this;
+  private final String RECIPE = "recipe";
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recipe_details);
 
-    if (findViewById(R.id.tablet_recipe_details) == null) {
-
-    }
-
+    Bundle bundle = new Bundle();
     Intent recipeIntent = getIntent();
     recipe = recipeIntent.getParcelableExtra("recipe_list");
-    ingredientsLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-    ingredientsRecyclerView = findViewById(R.id.recipe_ingredients_recyclerview);
-    ingredientsAdapter = new RecipeIngredientsAdapter(context, recipe.getIngredients());
-    ingredientsRecyclerView.setLayoutManager(ingredientsLayoutManager);
-    ingredientsRecyclerView.setAdapter(ingredientsAdapter);
+    bundle.putParcelable(RECIPE, recipe);
 
-    stepsLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-    stepsRecyclerView = findViewById(R.id.recipe_steps_recyclerview);
-    stepsAdapter = new RecipeStepsAdapter(context, recipe.getSteps());
-    stepsRecyclerView.setLayoutManager(stepsLayoutManager);
-    stepsRecyclerView.setAdapter(stepsAdapter);
+    RecipeDetailsFragment recipeDetailsFragment = new RecipeDetailsFragment();
+    recipeDetailsFragment.setArguments(bundle);
+
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    fragmentManager.beginTransaction().replace(R.id.recipe_details_container, recipeDetailsFragment).commit();
+
+    //if (findViewById(R.id.tablet_recipe_details) == null) {
+    //
+    //}
+
+    //ingredientsLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+    //ingredientsRecyclerView = findViewById(R.id.recipe_ingredients_recyclerview);
+    //ingredientsAdapter = new RecipeIngredientsAdapter(context, recipe.getIngredients());
+    //ingredientsRecyclerView.setLayoutManager(ingredientsLayoutManager);
+    //ingredientsRecyclerView.setAdapter(ingredientsAdapter);
+    //
+    //stepsLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+    //stepsRecyclerView = findViewById(R.id.recipe_steps_recyclerview);
+    //stepsAdapter = new RecipeStepsAdapter(context, recipe.getSteps());
+    //stepsRecyclerView.setLayoutManager(stepsLayoutManager);
+    //stepsRecyclerView.setAdapter(stepsAdapter);
   }
 }
