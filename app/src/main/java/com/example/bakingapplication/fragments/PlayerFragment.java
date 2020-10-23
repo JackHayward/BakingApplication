@@ -40,7 +40,7 @@ public class PlayerFragment extends Fragment {
   private final String DESCRIPTION = "description";
   private final String THUMBNAIL = "thumbnail";
   private final String SHORT_DESCRIPTION = "shortDescription";
-  private final String RECIPE_STEP = "recipe_step";
+  private final String RECIPE_STEP = "recipe";
   Uri uri;
   String description;
 
@@ -94,11 +94,11 @@ public class PlayerFragment extends Fragment {
         }
       }
 
-      if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-      } else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-      }
+      //if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+      //  ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+      //} else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+      //  ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+      //}
 
     return inflater.inflate(R.layout.fragment_player, container, false);
   }

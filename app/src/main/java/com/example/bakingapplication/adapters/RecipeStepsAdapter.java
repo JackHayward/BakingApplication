@@ -9,8 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakingapplication.R;
-import com.example.bakingapplication.RecipeDetailsActivity;
-import com.example.bakingapplication.StepActivity;
+import com.example.bakingapplication.StepDetailActivity;
 import com.example.bakingapplication.models.Ingredient;
 import com.example.bakingapplication.models.Step;
 import java.util.List;
@@ -47,7 +46,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
       @Override public void onClick(View view) {
         Step step = recipeSteps.get(position);
-        Intent intent = new Intent(context, StepActivity.class);
+        Intent intent = new Intent(context, StepDetailActivity.class);
         intent.putExtra(RECIPE_STEP, step);
         context.startActivity(intent);
       }

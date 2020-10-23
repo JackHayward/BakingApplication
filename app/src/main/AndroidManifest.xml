@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.bakingapplication">
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <uses-permission android:name="android.permission.INTERNET" />
+
   <application
       android:allowBackup="true"
       android:configChanges="orientation|screenSize|keyboardHidden"
@@ -11,8 +10,20 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
-    <activity android:name=".StepActivity">
+    <activity
+        android:name=".StepListActivity"
+        android:label="@string/title_recipe_list"
+        android:theme="@style/AppTheme.NoActionBar"></activity>
+    <activity
+        android:name=".StepDetailActivity"
+        android:label="@string/title_recipe_detail"
+        android:parentActivityName=".StepListActivity"
+        android:theme="@style/AppTheme.NoActionBar">
+      <meta-data
+          android:name="android.support.PARENT_ACTIVITY"
+          android:value="com.example.bakingapplication.StepListActivity" />
     </activity>
+    <activity android:name=".StepActivity"></activity>
     <activity
         android:name=".MainActivity"
         android:label="@string/baking_application_label">
@@ -24,7 +35,10 @@
     </activity>
     <activity
         android:name=".RecipeDetailsActivity"
-        android:label="Recipe Details Activity">
-    </activity>
+        android:label="Recipe Details Activity"></activity>
   </application>
+  <uses-permission android:name="android.permission.INTERNET" />
+
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 </manifest>

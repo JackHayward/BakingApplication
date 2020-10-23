@@ -10,12 +10,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakingapplication.R;
-import com.example.bakingapplication.RecipeDetailsActivity;
+import com.example.bakingapplication.StepListActivity;
 import com.example.bakingapplication.models.Recipe;
+import com.example.bakingapplication.models.Step;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
-  private final String RECIPE_LIST = "recipe_list";
+  private final String STEP = "recipe";
   Context context;
   List<Recipe> recipeList;
 
@@ -47,9 +49,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     holder.itemView.setOnClickListener(new View.OnClickListener() {
 
       @Override public void onClick(View view) {
-        Recipe recipe = recipeList.get(position);
-        Intent intent = new Intent(context, RecipeDetailsActivity.class);
-        intent.putExtra(RECIPE_LIST, recipe);
+        ArrayList<Step> steps = (ArrayList<Step>) recipeList.get(position).getSteps();
+        Intent intent = new Intent(context, StepListActivity.class);
+        intent.putParcelableArrayListExtra(STEP, steps);
         context.startActivity(intent);
       }
     });
