@@ -12,7 +12,6 @@ import com.example.bakingapplication.fragments.PlayerFragment;
 import com.example.bakingapplication.models.Recipe;
 import com.example.bakingapplication.models.Step;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.ActionBar;
 import android.view.MenuItem;
 import java.util.ArrayList;
 
@@ -33,7 +32,6 @@ public class StepDetailActivity extends AppCompatActivity {
     setContentView(R.layout.activity_recipe_detail);
 
     playerLayout = findViewById(R.id.player_container);
-    instruction = findViewById(R.id.step_instruction);
     nextStepButton = findViewById(R.id.btn_next_step);
     previousStepButton = findViewById(R.id.btn_previous_step);
 

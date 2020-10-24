@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.bakingapplication.fragments.PlayerFragment;
 import com.example.bakingapplication.models.Step;
 import java.util.ArrayList;
 
@@ -60,8 +61,8 @@ public class StepListActivity extends AppCompatActivity {
         Step item = (Step) view.getTag();
         if (mTwoPane) {
           Bundle arguments = new Bundle();
-          arguments.putParcelable(StepDetailFragment.ARG_ITEM_ID, item);
-          StepDetailFragment fragment = new StepDetailFragment();
+          arguments.putParcelable("recipe", item);
+          PlayerFragment fragment = new PlayerFragment();
           fragment.setArguments(arguments);
           mParentActivity.getSupportFragmentManager().beginTransaction()
               .replace(R.id.recipe_detail_container, fragment)

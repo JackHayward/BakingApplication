@@ -12,7 +12,7 @@
 //import com.example.bakingapplication.adapters.RecipeStepsAdapter;
 //import com.example.bakingapplication.models.Recipe;
 //
-//public class RecipeDetailsFragment extends Fragment {
+//public class StepListFragment extends Fragment {
 //
 //  private RecyclerView recyclerView;
 //  private RecyclerView.Adapter ingredientsAdapter;
