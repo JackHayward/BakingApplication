@@ -1,8 +1,10 @@
 package com.example.bakingapplication.fragments;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +28,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-public class PlayerFragment extends Fragment {
+public class PlayerFragment extends Fragment implements View.OnClickListener {
 
   SimpleExoPlayer player;
   DefaultBandwidthMeter bandwidthMeter;
@@ -38,6 +40,9 @@ public class PlayerFragment extends Fragment {
   Step step;
   private final String RECIPE_STEP = "recipe";
   Uri uri;
+  View view;
+  Button nextButton;
+  Button previousButton;
 
   public PlayerFragment() {
   }
@@ -94,8 +99,23 @@ public class PlayerFragment extends Fragment {
       //} else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
       //  ((AppCompatActivity) getActivity()).getSupportActionBar().show();
       //}
+    view = inflater.inflate(R.layout.fragment_player, container, false);
+    nextButton = (Button) view.findViewById(R.id.btn_next_step);
+    previousButton = (Button) view.findViewById(R.id.btn_previous_step);
+    nextButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        callBack.onOptionSelected("next", step);
+      }
+    });
+    previousButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        callBack.onOptionSelected("previous", step);
+      }
+    });
 
-    return inflater.inflate(R.layout.fragment_player, container, false);
+    return view;
   }
 
   @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -147,5 +167,25 @@ public class PlayerFragment extends Fragment {
     if (player != null) {
       terminatePlayer();
     }
+  }
+
+  public interface OnOptionClickListener {
+    void onOptionSelected(String option, Step step);
+  }
+
+  private OnOptionClickListener callBack;
+
+  @Override public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
+
+    try {
+      callBack = (OnOptionClickListener) context;
+    } catch (Exception e) {
+      throw new ClassCastException(context.toString() + " must implement PlayerFragment.OnOptionClickListener");
+    }
+  }
+
+  @Override public void onClick(View view) {
+    int id = view.getId();
   }
 }

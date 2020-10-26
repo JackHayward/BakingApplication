@@ -32,40 +32,40 @@ public class StepDetailActivity extends AppCompatActivity {
     setContentView(R.layout.activity_recipe_detail);
 
     playerLayout = findViewById(R.id.player_container);
-    nextStepButton = findViewById(R.id.btn_next_step);
-    previousStepButton = findViewById(R.id.btn_previous_step);
+    //nextStepButton = findViewById(R.id.btn_next_step);
+    //previousStepButton = findViewById(R.id.btn_previous_step);
 
-    nextStepButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (stepArrayList.get(step.getId()).getId() == stepArrayList.size() -1) {
-          return;
-        }
-        finish();
-        overridePendingTransition(0, 0);
-        step = stepArrayList.get(step.getId()+1);
-        Intent intent = new Intent(context, StepDetailActivity.class);
-        intent.putExtra("recipe", step);
-        intent.putParcelableArrayListExtra("step_list", stepArrayList);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-      }
-    });
-
-    previousStepButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (stepArrayList.get(step.getId()).getId() == 0) {
-          return;
-        }
-        finish();
-        overridePendingTransition(0, 0);
-        step = stepArrayList.get(step.getId()-1);
-        Intent intent = new Intent(context, StepDetailActivity.class);
-        intent.putExtra("recipe", step);
-        intent.putParcelableArrayListExtra("step_list", stepArrayList);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-      }
-    });
+    //nextStepButton.setOnClickListener(new View.OnClickListener() {
+    //  @Override public void onClick(View view) {
+    //    if (stepArrayList.get(step.getId()).getId() == stepArrayList.size() -1) {
+    //      return;
+    //    }
+    //    finish();
+    //    overridePendingTransition(0, 0);
+    //    step = stepArrayList.get(step.getId()+1);
+    //    Intent intent = new Intent(context, StepDetailActivity.class);
+    //    intent.putExtra("recipe", step);
+    //    intent.putParcelableArrayListExtra("step_list", stepArrayList);
+    //    startActivity(intent);
+    //    overridePendingTransition(0, 0);
+    //  }
+    //});
+    //
+    //previousStepButton.setOnClickListener(new View.OnClickListener() {
+    //  @Override public void onClick(View view) {
+    //    if (stepArrayList.get(step.getId()).getId() == 0) {
+    //      return;
+    //    }
+    //    finish();
+    //    overridePendingTransition(0, 0);
+    //    step = stepArrayList.get(step.getId()-1);
+    //    Intent intent = new Intent(context, StepDetailActivity.class);
+    //    intent.putExtra("recipe", step);
+    //    intent.putParcelableArrayListExtra("step_list", stepArrayList);
+    //    startActivity(intent);
+    //    overridePendingTransition(0, 0);
+    //  }
+    //});
 
     // Show the Up button in the action bar.
     //ActionBar actionBar = getSupportActionBar();

@@ -1,5 +1,6 @@
 package com.example.bakingapplication;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +17,11 @@ import com.example.bakingapplication.fragments.PlayerFragment;
 import com.example.bakingapplication.models.Step;
 import java.util.ArrayList;
 
-public class StepListActivity extends AppCompatActivity {
+public class StepListActivity extends AppCompatActivity implements PlayerFragment.OnOptionClickListener {
 
   static ArrayList<Step> steps;
   private final String RECIPE = "recipe";
+  Context context = this;
 
   private boolean mTwoPane;
 
@@ -50,6 +52,12 @@ public class StepListActivity extends AppCompatActivity {
     recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, steps, mTwoPane));
   }
 
+  @Override public void onOptionSelected(String option, Step step) {
+    Intent intent = new Intent(context, StepDetailActivity.class);
+    intent.putExtra("recipe", step);
+    intent.putParcelableArrayListExtra("step_list", steps);
+  }
+
   public static class SimpleItemRecyclerViewAdapter
       extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
@@ -61,8 +69,8 @@ public class StepListActivity extends AppCompatActivity {
         Step item = (Step) view.getTag();
         if (mTwoPane) {
           Bundle arguments = new Bundle();
-          arguments.putParcelable("recipe", item);
           PlayerFragment fragment = new PlayerFragment();
+          arguments.putParcelable("recipe", item);
           fragment.setArguments(arguments);
           mParentActivity.getSupportFragmentManager().beginTransaction()
               .replace(R.id.recipe_detail_container, fragment)
