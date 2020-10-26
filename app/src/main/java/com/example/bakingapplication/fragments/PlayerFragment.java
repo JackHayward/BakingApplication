@@ -36,13 +36,8 @@ public class PlayerFragment extends Fragment {
   MediaSource videoSource;
   PlayerView playerView;
   Step step;
-  private final String URI = "uri";
-  private final String DESCRIPTION = "description";
-  private final String THUMBNAIL = "thumbnail";
-  private final String SHORT_DESCRIPTION = "shortDescription";
   private final String RECIPE_STEP = "recipe";
   Uri uri;
-  String description;
 
   public PlayerFragment() {
   }
