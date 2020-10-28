@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.example.bakingapplication.fragments.PlayerFragment;
 import com.example.bakingapplication.models.Recipe;
@@ -15,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import java.util.ArrayList;
 
-public class StepDetailActivity extends AppCompatActivity {
+public class StepDetailActivity extends AppCompatActivity implements PlayerFragment.OnOptionClickListener {
   private final String RECIPE = "recipe";
   private Recipe recipe;
   private FrameLayout playerLayout;
@@ -122,5 +124,18 @@ public class StepDetailActivity extends AppCompatActivity {
       return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void onOptionSelected(String option, Step step) {
+
+  }
+
+  @Override
+  public void onAttachFragment(@NonNull Fragment fragment) {
+    super.onAttachFragment(fragment);
+    if (fragment instanceof PlayerFragment) {
+      PlayerFragment playerFragment = (PlayerFragment) fragment;
+      playerFragment.setCallBack(this);
+    }
   }
 }

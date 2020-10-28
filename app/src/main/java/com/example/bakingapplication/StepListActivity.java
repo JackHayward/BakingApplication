@@ -1,11 +1,11 @@
 package com.example.bakingapplication;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -17,7 +17,8 @@ import com.example.bakingapplication.fragments.PlayerFragment;
 import com.example.bakingapplication.models.Step;
 import java.util.ArrayList;
 
-public class StepListActivity extends AppCompatActivity implements PlayerFragment.OnOptionClickListener {
+public class StepListActivity extends AppCompatActivity
+    implements PlayerFragment.OnOptionClickListener {
 
   static ArrayList<Step> steps;
   private final String RECIPE = "recipe";
@@ -53,9 +54,49 @@ public class StepListActivity extends AppCompatActivity implements PlayerFragmen
   }
 
   @Override public void onOptionSelected(String option, Step step) {
-    Intent intent = new Intent(context, StepDetailActivity.class);
-    intent.putExtra("recipe", step);
-    intent.putParcelableArrayListExtra("step_list", steps);
+    switch (option) {
+      case "next":
+        if (steps.get(step.getId()).getId() == steps.size() - 1) {
+          return;
+        }
+        step = steps.get(step.getId() + 1);
+        finish();
+
+        if (mTwoPane) {
+          Bundle arguments = new Bundle();
+          PlayerFragment fragment = new PlayerFragment();
+          arguments.putParcelable("recipe", step);
+          fragment.setArguments(arguments);
+          getSupportFragmentManager().beginTransaction()
+              .replace(R.id.recipe_detail_container, fragment)
+              .commit();
+        } else {
+          Context context = this;
+          Intent intent = new Intent(context, StepDetailActivity.class);
+          intent.putExtra("recipe", step);
+          intent.putParcelableArrayListExtra("step_list", steps);
+
+          context.startActivity(intent);
+        }
+
+        break;
+      case "previous":
+        if (steps.get(step.getId()).getId() == 0) {
+          return;
+        }
+        finish();
+        overridePendingTransition(0, 0);
+        step = steps.get(step.getId() - 1);
+        Intent previousIntent = new Intent(context, StepDetailActivity.class);
+        previousIntent.putExtra("recipe", step);
+        previousIntent.putParcelableArrayListExtra("step_list", steps);
+        startActivity(previousIntent);
+        overridePendingTransition(0, 0);
+        break;
+    }
+    //Intent intent = new Intent(context, StepDetailActivity.class);
+    //intent.putExtra("recipe", step);
+    //intent.putParcelableArrayListExtra("step_list", steps);
   }
 
   public static class SimpleItemRecyclerViewAdapter
@@ -101,7 +142,7 @@ public class StepListActivity extends AppCompatActivity implements PlayerFragmen
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-      holder.mIdView.setText(String.valueOf(position +1));
+      holder.mIdView.setText(String.valueOf(position + 1));
       holder.mContentView.setText(steps.get(position).getShortDescription());
 
       holder.itemView.setTag(steps.get(position));
@@ -122,6 +163,15 @@ public class StepListActivity extends AppCompatActivity implements PlayerFragmen
         mIdView = (TextView) view.findViewById(R.id.id_text);
         mContentView = (TextView) view.findViewById(R.id.content);
       }
+    }
+  }
+
+  @Override
+  public void onAttachFragment(@NonNull Fragment fragment) {
+    super.onAttachFragment(fragment);
+    if (fragment instanceof PlayerFragment) {
+      PlayerFragment playerFragment = (PlayerFragment) fragment;
+      playerFragment.setCallBack(this);
     }
   }
 }

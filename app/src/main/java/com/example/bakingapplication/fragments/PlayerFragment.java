@@ -43,6 +43,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
   View view;
   Button nextButton;
   Button previousButton;
+  private OnOptionClickListener callBack;
 
   public PlayerFragment() {
   }
@@ -173,16 +174,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     void onOptionSelected(String option, Step step);
   }
 
-  private OnOptionClickListener callBack;
+  //@Override public void onAttach(@NonNull Context context) {
+  //  super.onAttach(context);
+  //
+  //  try {
+  //    callBack = (OnOptionClickListener) getActivity();
+  //  } catch (Exception e) {
+  //    throw new ClassCastException(context.toString() + " must implement PlayerFragment.OnOptionClickListener");
+  //  }
+  //}
 
-  @Override public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    try {
-      callBack = (OnOptionClickListener) context;
-    } catch (Exception e) {
-      throw new ClassCastException(context.toString() + " must implement PlayerFragment.OnOptionClickListener");
-    }
+  public void setCallBack(OnOptionClickListener callBack) {
+    this.callBack = callBack;
   }
 
   @Override public void onClick(View view) {
