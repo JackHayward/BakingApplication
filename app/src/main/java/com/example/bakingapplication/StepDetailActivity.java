@@ -3,7 +3,6 @@ package com.example.bakingapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -25,7 +24,7 @@ public class StepDetailActivity extends AppCompatActivity implements PlayerFragm
   private Step step;
   private Button nextStepButton;
   private Button previousStepButton;
-  private ArrayList<Step> stepArrayList = new ArrayList<>();
+  private ArrayList<Step> steps = new ArrayList<>();
   private Context context = this;
 
   @Override
@@ -77,7 +76,7 @@ public class StepDetailActivity extends AppCompatActivity implements PlayerFragm
 
     Intent recipeIntent = getIntent();
     step = recipeIntent.getParcelableExtra(RECIPE);
-    stepArrayList = recipeIntent.getParcelableArrayListExtra("step_list");
+    steps = recipeIntent.getParcelableArrayListExtra("step_list");
 
     PlayerFragment playerFragment = new PlayerFragment();
     Bundle bundle = new Bundle();
@@ -114,12 +113,6 @@ public class StepDetailActivity extends AppCompatActivity implements PlayerFragm
   public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
     if (id == android.R.id.home) {
-      // This ID represents the Home or Up button. In the case of this
-      // activity, the Up button is shown. For
-      // more details, see the Navigation pattern on Android Design:
-      //
-      // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-      //
       navigateUpTo(new Intent(this, StepListActivity.class));
       return true;
     }
@@ -127,7 +120,32 @@ public class StepDetailActivity extends AppCompatActivity implements PlayerFragm
   }
 
   @Override public void onOptionSelected(String option, Step step) {
+    Context context = this;
+    Intent intent = new Intent(context, StepDetailActivity.class);
 
+    switch (option) {
+      case "next":
+        if (steps.get(step.getId()).getId() == steps.size() - 1) {
+          return;
+        }
+        finish();
+        step = steps.get(step.getId() + 1);
+        intent.putExtra("recipe", step);
+        intent.putParcelableArrayListExtra("step_list", steps);
+        context.startActivity(intent);
+        break;
+
+      case "previous":
+        if (steps.get(step.getId()).getId() == 0) {
+          return;
+        }
+        finish();
+        step = steps.get(step.getId() - 1);
+        intent.putExtra("recipe", step);
+        intent.putParcelableArrayListExtra("step_list", steps);
+        context.startActivity(intent);
+        break;
+    }
   }
 
   @Override

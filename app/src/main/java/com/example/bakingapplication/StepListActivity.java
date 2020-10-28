@@ -54,49 +54,36 @@ public class StepListActivity extends AppCompatActivity
   }
 
   @Override public void onOptionSelected(String option, Step step) {
+    Bundle arguments = new Bundle();
+    PlayerFragment fragment = new PlayerFragment();
+
     switch (option) {
       case "next":
         if (steps.get(step.getId()).getId() == steps.size() - 1) {
           return;
         }
         step = steps.get(step.getId() + 1);
-        finish();
 
-        if (mTwoPane) {
-          Bundle arguments = new Bundle();
-          PlayerFragment fragment = new PlayerFragment();
-          arguments.putParcelable("recipe", step);
-          fragment.setArguments(arguments);
-          getSupportFragmentManager().beginTransaction()
-              .replace(R.id.recipe_detail_container, fragment)
-              .commit();
-        } else {
-          Context context = this;
-          Intent intent = new Intent(context, StepDetailActivity.class);
-          intent.putExtra("recipe", step);
-          intent.putParcelableArrayListExtra("step_list", steps);
-
-          context.startActivity(intent);
-        }
-
+        arguments.putParcelable("recipe", step);
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.recipe_detail_container, fragment)
+            .commit();
         break;
+
       case "previous":
         if (steps.get(step.getId()).getId() == 0) {
           return;
         }
-        finish();
-        overridePendingTransition(0, 0);
         step = steps.get(step.getId() - 1);
-        Intent previousIntent = new Intent(context, StepDetailActivity.class);
-        previousIntent.putExtra("recipe", step);
-        previousIntent.putParcelableArrayListExtra("step_list", steps);
-        startActivity(previousIntent);
-        overridePendingTransition(0, 0);
+
+        arguments.putParcelable("recipe", step);
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.recipe_detail_container, fragment)
+            .commit();
         break;
     }
-    //Intent intent = new Intent(context, StepDetailActivity.class);
-    //intent.putExtra("recipe", step);
-    //intent.putParcelableArrayListExtra("step_list", steps);
   }
 
   public static class SimpleItemRecyclerViewAdapter
