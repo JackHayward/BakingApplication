@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +44,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
   View view;
   Button nextButton;
   Button previousButton;
+  ImageView placeholder;
   private OnOptionClickListener callBack;
 
   public PlayerFragment() {
@@ -87,20 +89,27 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
   @Nullable @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+      view = inflater.inflate(R.layout.fragment_player, container, false);
+      placeholder = (ImageView) view.findViewById(R.id.placeholder_image);
+      playerView = view.findViewById(R.id.player_view);
+      placeholder.setVisibility(View.GONE);
 
       if (getArguments() != null) {
-        step = getArguments().getParcelable(RECIPE_STEP);
-        if (step.getVideoURL() != null) {
-          uri = Uri.parse(step.getVideoURL());
+          step = getArguments().getParcelable(RECIPE_STEP);
+          if ((step.getVideoURL().equals(""))) {
+            placeholder.setVisibility(View.VISIBLE);
+            playerView.setVisibility(View.GONE);
+          } else {
+            playerView.setVisibility(View.VISIBLE);
+            uri = Uri.parse(step.getVideoURL());
+          }
         }
-      }
 
       //if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
       //  ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
       //} else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
       //  ((AppCompatActivity) getActivity()).getSupportActionBar().show();
       //}
-    view = inflater.inflate(R.layout.fragment_player, container, false);
     nextButton = (Button) view.findViewById(R.id.btn_next_step);
     previousButton = (Button) view.findViewById(R.id.btn_previous_step);
     nextButton.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +131,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
   @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    playerView = view.findViewById(R.id.player_view);
     initialisePlayer(uri);
   }
 
