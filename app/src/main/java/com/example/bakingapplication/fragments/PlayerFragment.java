@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.example.bakingapplication.R;
 import com.example.bakingapplication.models.Step;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -37,27 +39,29 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
   TrackSelector trackSelector;
   DataSource.Factory dataSourceFactory;
   MediaSource videoSource;
-  PlayerView playerView;
   Step step;
   private final String RECIPE_STEP = "recipe";
   Uri uri;
   View view;
-  Button nextButton;
-  Button previousButton;
-  ImageView placeholder;
   private OnOptionClickListener callBack;
+
+  @BindView(R.id.btn_next_step) Button nextButton;
+  @BindView(R.id.btn_previous_step) Button previousButton;
+  @BindView(R.id.placeholder_image) ImageView placeholder;
+  @BindView(R.id.player_view) PlayerView playerView;
 
   public PlayerFragment() {
   }
 
-  public void initialisePlayer(Uri videoUri){
-    if(player == null){
+  public void initialisePlayer(Uri videoUri) {
+    if (player == null) {
       bandwidthMeter = new DefaultBandwidthMeter();
       videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
       trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
       player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
       playerView.setPlayer(player);
-      dataSourceFactory = new DefaultDataSourceFactory(getContext(), Util.getUserAgent(getContext(), "BakingApplication"), bandwidthMeter);
+      dataSourceFactory = new DefaultDataSourceFactory(getContext(),
+          Util.getUserAgent(getContext(), "BakingApplication"), bandwidthMeter);
       videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(videoUri);
       player.prepare(videoSource);
     }
@@ -89,29 +93,20 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
   @Nullable @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-      view = inflater.inflate(R.layout.fragment_player, container, false);
-      placeholder = (ImageView) view.findViewById(R.id.placeholder_image);
-      playerView = view.findViewById(R.id.player_view);
-      placeholder.setVisibility(View.GONE);
+    view = inflater.inflate(R.layout.fragment_player, container, false);
+    ButterKnife.bind(this, view);
+    placeholder.setVisibility(View.GONE);
 
-      if (getArguments() != null) {
-          step = getArguments().getParcelable(RECIPE_STEP);
-          if ((step.getVideoURL().equals(""))) {
-            placeholder.setVisibility(View.VISIBLE);
-            playerView.setVisibility(View.GONE);
-          } else {
-            playerView.setVisibility(View.VISIBLE);
-            uri = Uri.parse(step.getVideoURL());
-          }
-        }
-
-      //if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      //  ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-      //} else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-      //  ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-      //}
-    nextButton = (Button) view.findViewById(R.id.btn_next_step);
-    previousButton = (Button) view.findViewById(R.id.btn_previous_step);
+    if (getArguments() != null) {
+      step = getArguments().getParcelable(RECIPE_STEP);
+      if ((step.getVideoURL().equals(""))) {
+        placeholder.setVisibility(View.VISIBLE);
+        playerView.setVisibility(View.GONE);
+      } else {
+        playerView.setVisibility(View.VISIBLE);
+        uri = Uri.parse(step.getVideoURL());
+      }
+    }
     nextButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

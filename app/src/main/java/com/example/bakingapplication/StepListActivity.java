@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import butterknife.BindView;
 import com.example.bakingapplication.fragments.PlayerFragment;
 import com.example.bakingapplication.models.Step;
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ public class StepListActivity extends AppCompatActivity
 
   static ArrayList<Step> steps;
   private final String RECIPE = "recipe";
-  Context context = this;
-
   private boolean mTwoPane;
+
+  RecyclerView recyclerView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +45,8 @@ public class StepListActivity extends AppCompatActivity
       mTwoPane = true;
     }
 
-    View recyclerView = findViewById(R.id.recipe_list);
-    assert recyclerView != null;
-    setupRecyclerView((RecyclerView) recyclerView);
+    recyclerView = findViewById(R.id.recipe_list);
+    setupRecyclerView(recyclerView);
   }
 
   private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -94,7 +94,13 @@ public class StepListActivity extends AppCompatActivity
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
       @Override
       public void onClick(View view) {
+
+
         Step item = (Step) view.getTag();
+        Intent intent1 = new Intent(BakingWidget.CHANGED);
+        intent1.putExtra("RecipeName", item.getShortDescription());
+        mParentActivity.getApplicationContext().sendBroadcast(intent1);
+
         if (mTwoPane) {
           Bundle arguments = new Bundle();
           PlayerFragment fragment = new PlayerFragment();
