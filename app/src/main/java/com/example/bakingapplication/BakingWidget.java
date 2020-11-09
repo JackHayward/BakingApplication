@@ -52,8 +52,9 @@ public static final String ACTION_RECIPE_CHANGED= "com.example.bakingapplication
       if (intent.hasExtra("RecipeName")) {
         String rn = intent.getStringExtra("RecipeName");
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_widget);
+        int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         views.setTextViewText(R.id.appwidget_text, rn);
-        awm.updateAppWidget(new int []{1}, views);
+        awm.updateAppWidget(id, views);
       }
     }
   }
