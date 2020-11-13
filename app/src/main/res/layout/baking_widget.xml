@@ -17,6 +17,7 @@
       android:textColor="?attr/appWidgetTextColor"
       android:textSize="20sp"
       android:textStyle="bold|italic"
+      android:text="wfsfsdfsfsfsfsdfwefwergwerg"
       />
   <!--ListView
       android:layout_width="match_parent"

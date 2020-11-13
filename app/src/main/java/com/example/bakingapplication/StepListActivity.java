@@ -1,5 +1,6 @@
 package com.example.bakingapplication;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -99,6 +100,7 @@ public class StepListActivity extends AppCompatActivity
         Step item = (Step) view.getTag();
         Intent intent1 = new Intent(BakingWidget.CHANGED);
         intent1.putExtra("RecipeName", item.getShortDescription());
+        intent1.putExtra("AppWidgetManager.EXTRA_APPWIDGET_ID", BakingWidget.appWidgetId);
         mParentActivity.getApplicationContext().sendBroadcast(intent1);
 
         if (mTwoPane) {

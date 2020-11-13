@@ -38,10 +38,11 @@
         android:name=".RecipeDetailsActivity"
         android:label="Recipe Details Activity" />
 
-    <receiver android:name=".BakingWidget">
+    <receiver
+        android:name=".BakingWidget">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-        <action android:name="com.example.bakingapplication.ACTION_RECIPE_CHANGED"/>
+<!--        <action android:name="com.example.bakingapplication.ACTION_RECIPE_CHANGED"/>-->
       </intent-filter>
 
       <meta-data
