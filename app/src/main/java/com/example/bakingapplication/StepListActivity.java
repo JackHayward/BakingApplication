@@ -95,12 +95,10 @@ public class StepListActivity extends AppCompatActivity
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-
-
         Step item = (Step) view.getTag();
         Intent intent1 = new Intent(BakingWidget.CHANGED);
         intent1.putExtra("RecipeName", item.getShortDescription());
-        intent1.putExtra("AppWidgetManager.EXTRA_APPWIDGET_ID", BakingWidget.appWidgetId);
+        intent1.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new ArrayList<>(BakingWidget.appWidgetIds));
         mParentActivity.getApplicationContext().sendBroadcast(intent1);
 
         if (mTwoPane) {

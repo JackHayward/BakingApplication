@@ -5,16 +5,21 @@ import android.appwidget.AppWidgetProvider;
 import android.content.*;
 import android.util.Log;
 import android.widget.RemoteViews;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class BakingWidget extends AppWidgetProvider {
   public static String CHANGED = "android.appwidget.action.APPWIDGET_UPDATE";
-public static final String ACTION_RECIPE_CHANGED= "com.example.bakingapplication.ACTION_RECIPE_CHANGED";
+  public static final String ACTION_RECIPE_CHANGED =
+      "com.example.bakingapplication.ACTION_RECIPE_CHANGED";
 
   static AppWidgetManager awm;
-  static int appWidgetId;
+  static Set<Integer> appWidgetIds = new LinkedHashSet<>();
+
   static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
       int appWidgetId) {
 
@@ -24,9 +29,11 @@ public static final String ACTION_RECIPE_CHANGED= "com.example.bakingapplication
     views.setTextViewText(R.id.appwidget_text, widgetText);
 
     // Instruct the widget manager to update the widget
-    appWidgetManager.updateAppWidget(appWidgetId, views);
+    appWidgetManager.updateAppWidget(new ComponentName(context, BakingWidget.class), views);
     awm = appWidgetManager;
     Log.d("WIDGET ID", String.valueOf(appWidgetId));
+
+    appWidgetIds.add(appWidgetId);
   }
 
   @Override
@@ -48,16 +55,18 @@ public static final String ACTION_RECIPE_CHANGED= "com.example.bakingapplication
   }
 
   @Override
-  public void onReceive(Context context, Intent intent){
-    super.onReceive(context,intent);
+  public void onReceive(Context context, Intent intent) {
+    super.onReceive(context, intent);
 
-    if (intent.getAction().equals(CHANGED)){
+    if (intent.getAction().equals(CHANGED)) {
       if (intent.hasExtra("RecipeName")) {
         String rn = intent.getStringExtra("RecipeName");
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_widget);
-        int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        views.setTextViewText(R.id.appwidget_text, rn);
-        awm.updateAppWidget(id, views);
+        List<Integer> ids = intent.getIntegerArrayListExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+        for(Integer id: ids) {
+          views.setTextViewText(R.id.appwidget_text, rn); // TODO: use setRemoteAdapter and a ListView
+          awm.updateAppWidget(id, views);
+        }
       }
     }
   }
