@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Optional;
 import com.example.bakingapplication.R;
 import com.example.bakingapplication.models.Step;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -45,7 +46,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
   View view;
   private OnOptionClickListener callBack;
 
+  @Nullable
   @BindView(R.id.btn_next_step) Button nextButton;
+  @Nullable
   @BindView(R.id.btn_previous_step) Button previousButton;
   @BindView(R.id.placeholder_image) ImageView placeholder;
   @BindView(R.id.player_view) PlayerView playerView;
@@ -107,18 +110,20 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         uri = Uri.parse(step.getVideoURL());
       }
     }
-    nextButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        callBack.onOptionSelected("next", step);
-      }
-    });
-    previousButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        callBack.onOptionSelected("previous", step);
-      }
-    });
+    if (nextButton != null && previousButton != null) {
+      nextButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          callBack.onOptionSelected("next", step);
+        }
+      });
+      previousButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          callBack.onOptionSelected("previous", step);
+        }
+      });
+    }
 
     return view;
   }

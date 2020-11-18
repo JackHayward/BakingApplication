@@ -19,8 +19,8 @@ import java.util.ArrayList;
 
 public class StepDetailActivity extends AppCompatActivity implements PlayerFragment.OnOptionClickListener {
   private final String RECIPE = "recipe";
-  private Step step;
   private ArrayList<Step> steps = new ArrayList<>();
+  private Step step;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

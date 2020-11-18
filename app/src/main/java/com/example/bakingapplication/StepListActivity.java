@@ -13,9 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import butterknife.BindView;
 import com.example.bakingapplication.fragments.PlayerFragment;
+import com.example.bakingapplication.models.Ingredient;
 import com.example.bakingapplication.models.Step;
 import java.util.ArrayList;
 
@@ -23,7 +22,9 @@ public class StepListActivity extends AppCompatActivity
     implements PlayerFragment.OnOptionClickListener {
 
   static ArrayList<Step> steps;
+  static ArrayList<Ingredient> ingredients;
   private final String RECIPE = "recipe";
+  private final String INGREDIENTS = "ingredient";
   private boolean mTwoPane;
 
   RecyclerView recyclerView;
@@ -40,7 +41,9 @@ public class StepListActivity extends AppCompatActivity
     Bundle bundle = new Bundle();
     Intent recipeIntent = getIntent();
     steps = recipeIntent.getParcelableArrayListExtra(RECIPE);
+    ingredients = recipeIntent.getParcelableArrayListExtra(INGREDIENTS);
     bundle.putParcelableArrayList(RECIPE, steps);
+    bundle.putParcelableArrayList(INGREDIENTS, ingredients);
 
     if (findViewById(R.id.recipe_detail_container) != null) {
       mTwoPane = true;
@@ -48,6 +51,17 @@ public class StepListActivity extends AppCompatActivity
 
     recyclerView = findViewById(R.id.recipe_list);
     setupRecyclerView(recyclerView);
+
+    if (mTwoPane) {
+      Step step = steps.get(0);
+      Bundle arguments = new Bundle();
+      PlayerFragment fragment = new PlayerFragment();
+      arguments.putParcelable("recipe", step);
+      fragment.setArguments(arguments);
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.recipe_detail_container, fragment)
+          .commit();
+    }
   }
 
   private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -97,7 +111,7 @@ public class StepListActivity extends AppCompatActivity
       public void onClick(View view) {
         Step item = (Step) view.getTag();
         Intent intent1 = new Intent(BakingWidget.CHANGED);
-        intent1.putExtra("RecipeName", item.getShortDescription());
+        intent1.putParcelableArrayListExtra("RecipeName", ingredients);
         intent1.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new ArrayList<>(BakingWidget.appWidgetIds));
         mParentActivity.getApplicationContext().sendBroadcast(intent1);
 

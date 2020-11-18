@@ -4,7 +4,13 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.*;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RemoteViews;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import com.example.bakingapplication.models.Ingredient;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,14 +66,41 @@ public class BakingWidget extends AppWidgetProvider {
 
     if (intent.getAction().equals(CHANGED)) {
       if (intent.hasExtra("RecipeName")) {
-        String rn = intent.getStringExtra("RecipeName");
+        //String rn = intent.getStringExtra("RecipeName");
+        ArrayList<Ingredient> ingredients = intent.getParcelableArrayListExtra("RecipeName");
+        String ingredientItems = convertIngredientsListToString(ingredients);
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_widget);
         List<Integer> ids = intent.getIntegerArrayListExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
         for(Integer id: ids) {
-          views.setTextViewText(R.id.appwidget_text, rn); // TODO: use setRemoteAdapter and a ListView
+
+
+          views.setTextViewText(R.id.appwidget_text, ingredientItems); // TODO: use setRemoteAdapter and a ListView
           awm.updateAppWidget(id, views);
         }
       }
     }
+  }
+
+  public ArrayList<String> convertIngredientsToStrings(ArrayList<Ingredient> ingredients) {
+    ArrayList<String> finalList = new ArrayList<>();
+
+    for (Ingredient ingredient : ingredients) {
+      finalList.add(ingredient.getIngredient());
+    }
+
+    return finalList;
+  }
+
+  public String convertIngredientsListToString(ArrayList<Ingredient> ingredients) {
+    String finalString = "";
+
+    if (ingredients != null) {
+      for (Ingredient ingredient : ingredients) {
+        finalString += "\n" + ingredient.getIngredient();
+      }
+    }
+
+    return finalString;
   }
 }
