@@ -1,6 +1,7 @@
 package com.example.bakingapplication;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.assertion.ViewAssertions;
@@ -11,8 +12,11 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import org.hamcrest.CoreMatchers;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +32,13 @@ import static org.junit.Assert.*;
 public class ExampleInstrumentedTest {
   @Rule
   public IntentsTestRule intentRule = new IntentsTestRule(MainActivity.class);
+  private RecipeIdlingResource idlingResource;
+
+  @Before
+  public void registerIntentServiceIdlingResource() {
+    idlingResource = new RecipeIdlingResource();
+    Espresso.registerIdlingResources(idlingResource);
+  }
 
   @Test
   public void selectingRecipesOpensPlayerCorrectly() {
@@ -58,5 +69,10 @@ public class ExampleInstrumentedTest {
     Espresso.onView(ViewMatchers.withId(R.id.player_view))
         .check(ViewAssertions.matches(
             ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+  }
+
+  @After
+  public void unregisterIntentServiceIdlingResource() {
+    Espresso.unregisterIdlingResources(idlingResource);
   }
 }

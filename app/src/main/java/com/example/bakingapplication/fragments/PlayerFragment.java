@@ -1,23 +1,20 @@
 package com.example.bakingapplication.fragments;
 
-import android.content.Context;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Optional;
 import com.example.bakingapplication.R;
 import com.example.bakingapplication.models.Step;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -45,6 +42,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
   Uri uri;
   View view;
   private OnOptionClickListener callBack;
+  public static final String PLAY_WHEN_READY =  "play_when_ready";
+  public static final String URI =  "step_uri";
+  public static final String STEP =  "step";
+  public static final String VIDEO_POSITION =  "video_position";
+  private long playerPosition;
+  private int windowIndex;
+  private boolean shouldPlayWhenReady;
 
   @Nullable
   @BindView(R.id.btn_next_step) Button nextButton;
@@ -66,18 +70,24 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
       dataSourceFactory = new DefaultDataSourceFactory(getContext(),
           Util.getUserAgent(getContext(), "BakingApplication"), bandwidthMeter);
       videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(videoUri);
+
+      if (playerPosition != C.TIME_UNSET) {
+        player.seekTo(playerPosition);
+      }
+
       player.prepare(videoSource);
+      player.setPlayWhenReady(shouldPlayWhenReady);
     }
   }
 
   private void terminatePlayer() {
     if (player != null) {
+      shouldPlayWhenReady = player.getPlayWhenReady();
+      playerPosition = player.getCurrentPosition();
+      windowIndex = player.getCurrentWindowIndex();
       player.stop();
       player.release();
       player = null;
-      dataSourceFactory = null;
-      videoSource = null;
-      trackSelector = null;
     }
   }
 
@@ -99,6 +109,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     view = inflater.inflate(R.layout.fragment_player, container, false);
     ButterKnife.bind(this, view);
     placeholder.setVisibility(View.GONE);
+
+    if(savedInstanceState != null){
+      step = savedInstanceState.getParcelable(STEP);
+      playerPosition = savedInstanceState.getLong(VIDEO_POSITION);
+      uri = Uri.parse(savedInstanceState.getString(URI));
+    }
 
     if (getArguments() != null) {
       step = getArguments().getParcelable(RECIPE_STEP);
@@ -148,33 +164,34 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     if (Util.SDK_INT <= 23 || player == null) {
       initialisePlayer(uri);
     }
+    if (player != null) {
+      player.setPlayWhenReady(shouldPlayWhenReady);
+      player.seekTo(playerPosition);
+    }
   }
 
   @Override public void onPause() {
     super.onPause();
-    if (player != null) {
-      terminatePlayer();
+    if(player != null){
+      shouldPlayWhenReady = player.getPlayWhenReady();
+      playerPosition = player.getCurrentPosition();
+      windowIndex = player.getCurrentWindowIndex();
+      if (Util.SDK_INT > 23) {
+        terminatePlayer();
+      }
     }
   }
 
-  @Override public void onStop() {
+  @Override
+  public void onStop() {
     super.onStop();
-    if (player != null) {
-      terminatePlayer();
-    }
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    if (player != null) {
-      terminatePlayer();
-    }
-  }
-
-  @Override public void onDetach() {
-    super.onDetach();
-    if (player != null) {
-      terminatePlayer();
+    if(player != null){
+      shouldPlayWhenReady = player.getPlayWhenReady();
+      playerPosition = player.getCurrentPosition();
+      windowIndex = player.getCurrentWindowIndex();
+      if (Util.SDK_INT > 23) {
+        terminatePlayer();
+      }
     }
   }
 
@@ -182,15 +199,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     void onOptionSelected(String option, Step step);
   }
 
-  //@Override public void onAttach(@NonNull Context context) {
-  //  super.onAttach(context);
-  //
-  //  try {
-  //    callBack = (OnOptionClickListener) getActivity();
-  //  } catch (Exception e) {
-  //    throw new ClassCastException(context.toString() + " must implement PlayerFragment.OnOptionClickListener");
-  //  }
-  //}
+  @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (player != null) {
+      shouldPlayWhenReady = player.getPlayWhenReady();
+      playerPosition = player.getCurrentPosition();
+      windowIndex = player.getCurrentWindowIndex();
+    }
+    outState.putLong(VIDEO_POSITION, playerPosition);
+    outState.putString(URI, step.getVideoURL());
+    outState.putParcelable(STEP, step);
+  }
 
   public void setCallBack(OnOptionClickListener callBack) {
     this.callBack = callBack;

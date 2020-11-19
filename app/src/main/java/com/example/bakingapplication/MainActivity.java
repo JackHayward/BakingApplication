@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
   private RecyclerView.LayoutManager layoutManager;
   private Context context;
   private RecipeService recipeService;
+  public static boolean  allRecipesDownloaded = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
           recyclerView.setLayoutManager(layoutManager);
           recyclerView.setAdapter(adapter);
+          allRecipesDownloaded = true;
         }
 
         @Override
